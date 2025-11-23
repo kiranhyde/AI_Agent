@@ -1,5 +1,5 @@
 """Public exports for the AI agent package."""
 
-from .agent import WebSearchAgent
+from .agent import AgentConfig, WebSearchAgent
 
-__all__ = ["WebSearchAgent"]
+__all__ = ["AgentConfig", "WebSearchAgent"]
