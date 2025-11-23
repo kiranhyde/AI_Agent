@@ -6,9 +6,10 @@ import os
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
-from langchain.agents import AgentExecutor, AgentType, initialize_agent
+from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 load_dotenv()
 
@@ -56,10 +57,17 @@ class WebSearchAgent:
     tools = [
         TavilySearchResults(max_results=self._config.max_search_results)
     ]
-    return initialize_agent(
+    prompt = ChatPromptTemplate.from_messages([
+        ("system",
+         "You are a meticulous research assistant. Use Tavily search results "
+         "to answer the user's question with concise, citation-backed facts."),
+        ("human", "{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad"),
+    ])
+    agent = create_tool_calling_agent(self._llm, tools, prompt)
+    return AgentExecutor(
+        agent=agent,
         tools=tools,
-        llm=self._llm,
-        agent=AgentType.OPENAI_FUNCTIONS,
         handle_parsing_errors=True,
         verbose=self._config.verbose)
 
