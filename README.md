@@ -1,5 +1,5 @@
 # Web-Searching AI Agent
-
+Learning Git Hub
 A minimal LangChain-powered agent that can look up fresh information on the
 internet and answer questions with citations pulled from Tavily search results.
 The project demonstrates how to combine OpenAI models with third-party tools
